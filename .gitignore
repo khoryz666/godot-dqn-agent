@@ -1,0 +1,23 @@
+# Guide
+GUIDE.md
+
+# Godot
+.godot/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# RL artifacts
+dqn-src/results/
+*.pt
+*.pth
+
+# OS
+.DS_Store
+Thumbs.db
