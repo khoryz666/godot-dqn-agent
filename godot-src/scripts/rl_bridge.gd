@@ -11,11 +11,14 @@ var total_score := 0.0
 var is_done := false
 var cause_of_death := ""
 var prev_apple_dist = -1.0
+var last_reconnect_time = 0.0
 
 func add_reward(amount: float):
 	current_reward += amount
-	if amount > 0:
-		total_score += amount
+
+func add_score(amount: float):
+	current_reward += amount
+	total_score += amount
 
 func reset_episode():
 	current_reward = 0.0
@@ -53,8 +56,11 @@ func _process(_delta):
 		if is_connected:
 			print("Disconnected from Python RL Agent.")
 			is_connected = false
-			# Try reconnecting? Wait for Python script to restart
-			# connect_to_server()
+			
+		var current_time = Time.get_ticks_msec() / 1000.0
+		if current_time - last_reconnect_time > 1.0:
+			last_reconnect_time = current_time
+			connect_to_server()
 
 func _handle_message(msg: String):
 	var json = JSON.new()

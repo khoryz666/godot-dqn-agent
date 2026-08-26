@@ -4,7 +4,7 @@ extends Node2D
 
 func _ready() -> void:
 	_setup_level()
-	if RLBridge.is_connected or true: # Connect signals anyway just in case
+	if RLBridge.is_connected: # Connect signals anyway just in case
 		RLBridge.action_received.connect(_on_action_received)
 		RLBridge.reset_requested.connect(_on_reset_requested)
 		RLBridge.reset_episode()
@@ -14,6 +14,8 @@ var frame_counter = 0
 
 func _physics_process(delta: float) -> void:
 	if RLBridge.is_connected:
+		if RLBridge.is_done:
+			return
 		RLBridge.add_reward(-0.01) # Small time penalty per physics frame
 		frame_counter += 1
 		

@@ -33,6 +33,8 @@ class DQNAgent:
         """
         Returns an action using epsilon-greedy policy.
         """
+        if not state or len(state) != self.state_size:
+            return 0
         if random.random() < self.epsilon:
             return random.randrange(self.action_size)
             

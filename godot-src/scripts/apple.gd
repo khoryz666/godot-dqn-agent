@@ -17,6 +17,6 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		animated_sprite_2d.animation = "collected"
 		collected_sound.play()
-		RLBridge.add_reward(10.0)
+		RLBridge.add_score(10.0)
 		# Disable collision to prevent multiple collections
 		set_deferred("monitoring", false)
