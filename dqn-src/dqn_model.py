@@ -6,7 +6,7 @@ class QNetwork(nn.Module):
     """
     Feedforward Neural Network to approximate Q-values.
     """
-    def __init__(self, state_size: int, action_size: int, hidden_size: int = 64):
+    def __init__(self, state_size: int, action_size: int, hidden_size: int = 128):
         super(QNetwork, self).__init__()
         self.fc1 = nn.Linear(state_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)

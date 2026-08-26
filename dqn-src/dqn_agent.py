@@ -71,11 +71,12 @@ class DQNAgent:
             target_q_values = rewards + (self.gamma * next_q_values * (1 - dones))
             
         # Compute loss
-        loss = nn.MSELoss()(current_q_values, target_q_values)
+        loss = nn.SmoothL1Loss()(current_q_values, target_q_values)
         
         # Optimize
         self.optimizer.zero_grad()
         loss.backward()
+        nn.utils.clip_grad_norm_(self.policy_net.parameters(), 10.0)
         self.optimizer.step()
         
         return loss.item()
