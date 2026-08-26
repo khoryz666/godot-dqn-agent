@@ -2,22 +2,31 @@
 
 A Reinforcement Learning project that trains a Deep Q-Network (DQN) agent to play a custom 2D Platformer in Godot 4.
 
-## Setup Instructions
+## Get Started
 
-### 1. Python Environment (Conda)
-This project uses Conda to manage its Python dependencies. 
-To install the environment and the required Jupyter kernel, run:
+1. **Install Anaconda** — download Anaconda via `winget` (available but not limited to).
 
-```bash
-# Create the conda environment from the environment.yml file
-conda env create -f environment.yml
+2. **Open Anaconda Prompt**.
 
-# Activate the newly created environment
-conda activate godot-dqn
+3. **Install `nb_conda_kernels`**:
+   ```bash
+   conda install -c conda-forge nb_conda_kernels
+   ```
 
-# Register the environment as a Jupyter kernel
-python -m ipykernel install --user --name godot-dqn --display-name "Python 3 (godot-dqn)"
-```
+4. **Create the environment** — navigate to the root directory of this repo, then run:
+   ```bash
+   conda env create -f environment.yml
+   ```
+
+5. **Launch Jupyter Notebook** — open Jupyter Notebook in Anaconda Navigator and choose the environment (kernel) you just created.
+
+### Adding / Removing Packages
+
+- Update `environment.yml` first, then execute the following in the same directory in Anaconda Prompt:
+  ```bash
+  conda env update -f environment.yml --prune
+  ```
+
 
 ### 2. Godot Game Setup
 - Ensure you have Godot 4.x installed.
@@ -26,6 +35,6 @@ python -m ipykernel install --user --name godot-dqn --display-name "Python 3 (go
 
 ### 3. Running the Agent
 - Open the Jupyter Notebook `dqn-src/DQN_Agent.ipynb`.
-- Make sure to select the `Python 3 (godot-dqn)` kernel in Jupyter.
+- Make sure to select the kernel in Jupyter.
 - Run the notebook cells to start the Python WebSocket server.
 - Press **Play** in the Godot Editor to connect the game to the agent and begin training/testing!
