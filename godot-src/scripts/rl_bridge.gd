@@ -10,6 +10,7 @@ var current_reward := 0.0
 var total_score := 0.0
 var is_done := false
 var cause_of_death := ""
+var prev_apple_dist = -1.0
 
 func add_reward(amount: float):
 	current_reward += amount
@@ -21,6 +22,7 @@ func reset_episode():
 	total_score = 0.0
 	is_done = false
 	cause_of_death = ""
+	prev_apple_dist = -1.0
 
 func _ready():
 	# Keep processing even when the game is paused

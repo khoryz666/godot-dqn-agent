@@ -27,6 +27,11 @@ func _physics_process(delta: float) -> void:
 func _send_rl_state():
 	var state = player.get_rl_state()
 	
+	if RLBridge.prev_apple_dist > 0.0 and player.current_apple_dist < 10000.0:
+		var delta_dist = RLBridge.prev_apple_dist - player.current_apple_dist
+		RLBridge.add_reward(delta_dist / 100.0)
+	RLBridge.prev_apple_dist = player.current_apple_dist
+	
 	# Check completion condition: 20 points means 2 apples eaten
 	if RLBridge.total_score >= 20.0 and not RLBridge.is_done:
 		RLBridge.is_done = true

@@ -9,6 +9,7 @@ var alive = true
 @onready var death_sound: AudioStreamPlayer2D = $DeathSound
 
 var current_rl_action = 0
+var current_apple_dist = 10000.0
 
 func get_rl_state() -> Array:
 	var state = []
@@ -23,12 +24,12 @@ func get_rl_state() -> Array:
 	# Vector to nearest reward
 	var apples = get_tree().get_nodes_in_group("apples")
 	var nearest_apple = null
-	var nearest_apple_dist = 10000.0
+	current_apple_dist = 10000.0
 	for apple in apples:
 		if apple.monitoring:
 			var dist = position.distance_to(apple.position)
-			if dist < nearest_apple_dist:
-				nearest_apple_dist = dist
+			if dist < current_apple_dist:
+				current_apple_dist = dist
 				nearest_apple = apple
 	
 	if nearest_apple:
