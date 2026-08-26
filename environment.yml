@@ -11,7 +11,7 @@ dependencies:
   - pytorch-cuda=11.8
   - jupyter
   - ipykernel
-  - numpy
+  - numpy<2
   - matplotlib
   - websockets
   - pip
