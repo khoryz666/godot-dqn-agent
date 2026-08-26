@@ -9,6 +9,7 @@ var is_connected := false
 var current_reward := 0.0
 var total_score := 0.0
 var is_done := false
+var cause_of_death := ""
 
 func add_reward(amount: float):
 	current_reward += amount
@@ -19,6 +20,7 @@ func reset_episode():
 	current_reward = 0.0
 	total_score = 0.0
 	is_done = false
+	cause_of_death = ""
 
 func _ready():
 	# Keep processing even when the game is paused
@@ -62,13 +64,14 @@ func _handle_message(msg: String):
 			elif data.has("action"):
 				action_received.emit(int(data["action"]))
 
-func send_state(state: Array, reward: float, done: bool, score: float):
+func send_state(state: Array, reward: float, done: bool, score: float, info: Dictionary = {}):
 	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 		var dict = {
 			"state": state,
 			"reward": reward,
 			"done": done,
-			"score": score
+			"score": score,
+			"info": info
 		}
 		var msg = JSON.stringify(dict)
 		socket.send_text(msg)

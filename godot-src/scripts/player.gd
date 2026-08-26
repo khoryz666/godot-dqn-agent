@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 		return
 		
 	if position.y > 1000:
-		die()
+		die("fall")
 		return
 
 	# Add animation 
@@ -105,12 +105,13 @@ func _physics_process(delta: float) -> void:
 	elif dir == -1.0:
 		animated_sprite_2d.flip_h = true
 		
-func die() -> void:
+func die(reason: String = "unknown") -> void:
 	death_sound.play()
 	animated_sprite_2d.animation = "dying"
 	alive = false
 	if RLBridge.is_connected:
 		RLBridge.add_reward(-10.0)
+		RLBridge.cause_of_death = reason
 		RLBridge.is_done = true
 		get_parent().get_parent()._send_rl_state()
 		

@@ -26,7 +26,18 @@ func _physics_process(delta: float) -> void:
 
 func _send_rl_state():
 	var state = player.get_rl_state()
-	RLBridge.send_state(state, RLBridge.current_reward, RLBridge.is_done, RLBridge.total_score)
+	
+	# Check completion condition: 20 points means 2 apples eaten
+	if RLBridge.total_score >= 20.0 and not RLBridge.is_done:
+		RLBridge.is_done = true
+		RLBridge.cause_of_death = "completed"
+		RLBridge.add_reward(10.0) # Bonus for finishing the level
+
+	var info = {
+		"cause_of_death": RLBridge.cause_of_death,
+		"distance_x": player.position.x
+	}
+	RLBridge.send_state(state, RLBridge.current_reward, RLBridge.is_done, RLBridge.total_score, info)
 	RLBridge.current_reward = 0.0
 
 func _on_action_received(action_id: int):
@@ -46,4 +57,4 @@ func _setup_level() -> void:
 				enemy.player_died.connect(_on_player_died)
 	
 func _on_player_died(body):
-	body.die()
+	body.die("snail")
