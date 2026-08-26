@@ -17,21 +17,41 @@ func get_rl_state() -> Array:
 	state.append(position.y / 1000.0)
 	# Grounded
 	state.append(1.0 if is_on_floor() else 0.0)
-	# Distance to nearest reward
+	# Vector to nearest reward
 	var apples = get_tree().get_nodes_in_group("apples")
+	var nearest_apple = null
 	var nearest_apple_dist = 10000.0
 	for apple in apples:
 		if apple.monitoring:
 			var dist = position.distance_to(apple.position)
-			if dist < nearest_apple_dist: nearest_apple_dist = dist
-	state.append(min(nearest_apple_dist / 1000.0, 1.0))
-	# Distance to nearest enemy
+			if dist < nearest_apple_dist:
+				nearest_apple_dist = dist
+				nearest_apple = apple
+	
+	if nearest_apple:
+		state.append(clamp((nearest_apple.position.x - position.x) / 1000.0, -1.0, 1.0))
+		state.append(clamp((nearest_apple.position.y - position.y) / 1000.0, -1.0, 1.0))
+	else:
+		state.append(0.0)
+		state.append(0.0)
+		
+	# Vector to nearest enemy
 	var enemies = get_tree().get_nodes_in_group("enemies")
+	var nearest_enemy = null
 	var nearest_enemy_dist = 10000.0
 	for enemy in enemies:
 		var dist = position.distance_to(enemy.position)
-		if dist < nearest_enemy_dist: nearest_enemy_dist = dist
-	state.append(min(nearest_enemy_dist / 1000.0, 1.0))
+		if dist < nearest_enemy_dist:
+			nearest_enemy_dist = dist
+			nearest_enemy = enemy
+			
+	if nearest_enemy:
+		state.append(clamp((nearest_enemy.position.x - position.x) / 1000.0, -1.0, 1.0))
+		state.append(clamp((nearest_enemy.position.y - position.y) / 1000.0, -1.0, 1.0))
+	else:
+		state.append(0.0)
+		state.append(0.0)
+		
 	return state
 
 func _physics_process(delta: float) -> void:
@@ -92,4 +112,5 @@ func die() -> void:
 	if RLBridge.is_connected:
 		RLBridge.add_reward(-10.0)
 		RLBridge.is_done = true
+		get_parent().get_parent()._send_rl_state()
 		
