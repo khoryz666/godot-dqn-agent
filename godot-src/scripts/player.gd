@@ -15,6 +15,9 @@ func get_rl_state() -> Array:
 	# Position
 	state.append(position.x / 1000.0)
 	state.append(position.y / 1000.0)
+	# Velocity
+	state.append(velocity.x / 1000.0)
+	state.append(velocity.y / 1000.0)
 	# Grounded
 	state.append(1.0 if is_on_floor() else 0.0)
 	# Vector to nearest reward
