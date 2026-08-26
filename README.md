@@ -35,6 +35,8 @@ A Reinforcement Learning project that trains a Deep Q-Network (DQN) agent to pla
 
 ### 3. Running the Agent
 - Open the Jupyter Notebook `dqn-src/DQN_Agent.ipynb`.
-- Make sure to select the kernel in Jupyter.
+- Make sure to select the kernel in Jupyter (`godot-dqn`).
 - Run the notebook cells to start the Python WebSocket server.
-- Press **Play** in the Godot Editor to connect the game to the agent and begin training/testing!
+- **Headless Automation**: The notebook uses Python's `subprocess` to automatically launch the Godot engine in headless mode. You do *not* need to manually press Play in the Godot Editor.
+- The agent will train rapidly in the background, plotting real-time metrics in Jupyter.
+- To visually watch the trained agent play, run the Phase 5 (Evaluation) cell, but remove the `--headless` flag from the code first!
