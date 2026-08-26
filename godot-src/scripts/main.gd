@@ -1,23 +1,41 @@
 extends Node2D
 
+@onready var player = $LevelRoot/Player
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_setup_level()
+	if RLBridge.is_connected or true: # Connect signals anyway just in case
+		RLBridge.action_received.connect(_on_action_received)
+		RLBridge.reset_requested.connect(_on_reset_requested)
+		RLBridge.reset_episode()
 
+func _physics_process(delta: float) -> void:
+	if RLBridge.is_connected:
+		RLBridge.add_reward(-0.01) # Small time penalty
+		# Wait for this physics frame to complete, then send state
+		call_deferred("_send_rl_state")
+		get_tree().paused = true
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-#	pass
-	
-# Connect enemies
+func _send_rl_state():
+	var state = player.get_rl_state()
+	RLBridge.send_state(state, RLBridge.current_reward, RLBridge.is_done, RLBridge.total_score)
+	RLBridge.current_reward = 0.0
+
+func _on_action_received(action_id: int):
+	player.current_rl_action = action_id
+	get_tree().paused = false
+
+func _on_reset_requested():
+	get_tree().paused = false
+	get_tree().reload_current_scene()
+	RLBridge.reset_episode()
+
 func _setup_level() -> void:
 	var enemies = $LevelRoot.get_node_or_null("Enemies")
 	if enemies:
 		for enemy in enemies.get_children():
-			enemy.player_died.connect(_on_player_died)
+			if enemy.has_signal("player_died"):
+				enemy.player_died.connect(_on_player_died)
 	
-# Signal handlers
 func _on_player_died(body):
 	body.die()
-	#print("player die")

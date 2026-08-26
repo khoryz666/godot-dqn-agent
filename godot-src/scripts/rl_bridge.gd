@@ -6,6 +6,20 @@ signal reset_requested()
 var socket := WebSocketPeer.new()
 var is_connected := false
 
+var current_reward := 0.0
+var total_score := 0.0
+var is_done := false
+
+func add_reward(amount: float):
+	current_reward += amount
+	if amount > 0:
+		total_score += amount
+
+func reset_episode():
+	current_reward = 0.0
+	total_score = 0.0
+	is_done = false
+
 func _ready():
 	# Keep processing even when the game is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
