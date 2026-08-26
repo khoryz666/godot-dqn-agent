@@ -9,12 +9,20 @@ func _ready() -> void:
 		RLBridge.reset_requested.connect(_on_reset_requested)
 		RLBridge.reset_episode()
 
+var frame_skip = 4
+var frame_counter = 0
+
 func _physics_process(delta: float) -> void:
 	if RLBridge.is_connected:
-		RLBridge.add_reward(-0.01) # Small time penalty
-		# Wait for this physics frame to complete, then send state
-		call_deferred("_send_rl_state")
-		get_tree().paused = true
+		RLBridge.add_reward(-0.01) # Small time penalty per physics frame
+		frame_counter += 1
+		
+		# Only ask for a new decision every 4 frames
+		if frame_counter >= frame_skip:
+			frame_counter = 0
+			# Wait for this physics frame to complete, then send state
+			call_deferred("_send_rl_state")
+			get_tree().paused = true
 
 func _send_rl_state():
 	var state = player.get_rl_state()
