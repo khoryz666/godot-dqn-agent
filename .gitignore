@@ -17,7 +17,12 @@ venv/
 dqn-src/results/
 *.pt
 *.pth
+PRESENTATION.md
+
+# Build Artifacts
+*.zip
 
 # OS
 .DS_Store
 Thumbs.db
+*.uid
