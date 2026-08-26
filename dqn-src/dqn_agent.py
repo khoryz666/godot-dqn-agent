@@ -13,8 +13,9 @@ class DQNAgent:
         self.action_size = action_size
         self.gamma = config.get("gamma", 0.99)
         self.epsilon = config.get("epsilon_start", 1.0)
-        self.epsilon_min = config.get("epsilon_min", 0.01)
-        self.epsilon_decay = config.get("epsilon_decay", 0.995)
+        self.epsilon_min = config.get("epsilon_min", 0.05)
+        self.epsilon_decay_steps = config.get("epsilon_decay_steps", 40000)
+        self.total_steps = 0
         self.batch_size = config.get("batch_size", 64)
         self.learning_rate = config.get("learning_rate", 1e-3)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -42,9 +43,11 @@ class DQNAgent:
 
     def update_epsilon(self):
         """
-        Decay the exploration rate.
+        Decay the exploration rate linearly based on total steps.
         """
-        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+        self.total_steps += 1
+        fraction = min(1.0, self.total_steps / self.epsilon_decay_steps)
+        self.epsilon = 1.0 + fraction * (self.epsilon_min - 1.0)
 
     def train_step(self):
         """
