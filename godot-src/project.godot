@@ -8,6 +8,10 @@
 
 config_version=5
 
+[autoload]
+
+RLBridge="*res://scripts/rl_bridge.gd"
+
 [application]
 
 config/name="AS3"
