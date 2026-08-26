@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **Phase 3: DQN Agent Implementation (Python)**:
+  - `dqn_model.py`: PyTorch `QNetwork` implementation for function approximation.
+  - `replay_buffer.py`: `ReplayBuffer` class for storing and sampling experience transitions.
+  - `dqn_agent.py`: `DQNAgent` class encapsulating target network syncing, epsilon-greedy action selection, and MSE loss optimization.
+  - `DQN_Agent.ipynb`: Fully integrated asynchronous training loop, combining the websocket server and modular DQN logic, complete with live `matplotlib` metric plotting.
 - **Phase 2: State, Action, and Reward Design** integrated into Godot:
   - `player.gd` now exports a 4-dimensional state (position, grounded, distances to nearest apple and enemy) and accepts 6 discrete RL actions.
   - `apple.gd` assigns a +10 reward upon collection.
