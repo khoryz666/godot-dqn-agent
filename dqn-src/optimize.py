@@ -238,6 +238,10 @@ async def main():
     tested_configs = set()
     
     for trial in range(1, num_trials + 1):
+        if len(tested_configs) >= 324:
+            print("All 324 unique combinations have been exhausted. Ending search early.")
+            break
+            
         while True:
             config = generate_random_config()
             config_str = json.dumps(config, sort_keys=True)
