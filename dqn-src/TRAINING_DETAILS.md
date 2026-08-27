@@ -3,6 +3,12 @@
 ## Deep Q-Network (DQN) Overview
 DQN is a reinforcement learning algorithm that uses a neural network to approximate the Q-value function. The Q-value represents the expected future reward for taking a specific action in a given state.
 
+## Tech Stack
+- **Game Engine:** Godot 4 (GDScript)
+- **Machine Learning Framework:** PyTorch (Python 3.10)
+- **Communication Protocol:** Asynchronous WebSockets (`websockets` library)
+- **Environment Management:** Conda
+
 ## Godot ↔ Python Communication Architecture
 - **Server:** An asynchronous Python WebSocket server (`websockets` library) runs inside the Jupyter Notebook on `ws://127.0.0.1:11000`.
 - **Client:** Godot connects as a client through the `RLBridge` autoload (`rl_bridge.gd`). If the connection drops, it automatically reconnects once per second.
