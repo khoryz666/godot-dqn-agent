@@ -1,59 +1,56 @@
-# Godot DQN Agent
+# Godot DQN Agent 🎮🤖
 
-A Reinforcement Learning project that trains a Deep Q-Network (DQN) agent to play a custom 2D Platformer in Godot 4.
+A complete Reinforcement Learning pipeline that trains a Deep Q-Network (DQN) agent to play a custom 2D Platformer built in Godot 4.
 
-## Get Started
+## 🚀 Quick Start Guide
 
-### 1. Python Environment Setup
+Follow these steps to set up your environment, launch the game, and start training your AI agent!
 
-1. **Install Anaconda** — download Anaconda via `winget` (available but not limited to).
+### 1. Environment Setup
 
-2. **Open Anaconda Prompt**.
+We use Conda to manage our Python dependencies.
 
-3. **Install `nb_conda_kernels`**:
+1. **Install Anaconda** (or Miniconda) on your system.
+2. Open your **Anaconda Prompt** and navigate to this repository's root directory.
+3. Install the Jupyter kernel manager:
    ```bash
    conda install -c conda-forge nb_conda_kernels
    ```
-
-4. **Create the environment** — navigate to the root directory of this repo, then run:
+4. Create the environment from the provided configuration file:
    ```bash
    conda env create -f environment.yml
    ```
+*(Note: If you ever need to update packages, edit `environment.yml` and run `conda env update -f environment.yml --prune`)*
 
-5. **Launch Jupyter Notebook** — open Jupyter Notebook in Anaconda Navigator and choose the environment (kernel) you just created (`godot-dqn`).
+### 2. Godot Setup
 
-### Adding / Removing Packages
+1. Ensure you have **Godot 4.x** installed.
+2. Open `godot-src/project.godot` in the Godot Editor.
+3. **Important Note:** You do *not* need to manually press Play in Godot! Our Python scripts will automatically launch the game in the background.
 
-- Update `environment.yml` first, then execute the following in the same directory in Anaconda Prompt:
-  ```bash
-  conda env update -f environment.yml --prune
-  ```
+### 3. How to Train the Agent
 
-### 2. Godot Game Setup
-- Ensure you have Godot 4.x installed.
-- Open `godot-src/project.godot` in the Godot Editor.
-- The game is configured to automatically communicate with the Python RL agent over WebSockets (default port 11000). The `RLBridge` autoload reconnects automatically if the Python server is (re)started.
-- The notebook launches Godot headlessly itself: on Windows it expects the executable at `~\scoop\apps\godot\current\godot.console.exe`; on other platforms it uses `godot` from `PATH`. Adjust the `godot_exe` line in the notebook if your installation differs.
+You can interact with and train the agent using the provided Jupyter Notebook.
 
-### 3. Running the Agent
-- Open the Jupyter Notebook `dqn-src/DQN_Agent.ipynb`.
-- Make sure to select the kernel in Jupyter (`godot-dqn`).
-- Run the cells in order:
-  - The first cells start the Python WebSocket server and define the DQN agent, environment wrapper, and plotting helpers.
-  - The Phase 4 training cell (`await train()`) automatically launches Godot in headless mode and trains for 500 episodes. Real-time metrics (reward, loss, epsilon) are plotted as training progresses. Weights are saved to `dqn-src/dqn_model.pth` when training finishes or is interrupted. If Godot disconnects mid-run, training aborts with a clear error instead of silently producing garbage episodes.
-  - The Phase 5 evaluation cell (`await test_agent()`) plays 50 test episodes using the saved weights with epsilon = 0 (fully deterministic) and prints a metrics table (completion rate, snail avoidance, fall rate, average apples/distance, etc.). A warning is shown if no trained model file exists.
-- **Headless Automation**: The notebook uses Python's `subprocess` to automatically launch the Godot engine in headless mode. You do *not* need to manually press Play in the Godot Editor.
-- To visually watch the trained agent play, remove the `--headless` flag from the Phase 5 cell's `subprocess.Popen` call before running it.
+1. Open Anaconda Navigator, launch **Jupyter Notebook**, and open `dqn-src/DQN_Agent.ipynb`.
+2. In the top right corner of Jupyter, ensure your kernel is set to **`conda env:godot-dqn`**.
+3. **Run the Cells in Order:**
+   - The first few cells establish the WebSocket server and configure the AI's neural network.
+   - **Phase 4 (Training):** Running `await train()` automatically launches Godot in headless mode and begins training the agent for 500 episodes. Real-time metrics will plot directly in your notebook. If you stop the cell, your model weights will be safely saved to `dqn_model.pth`.
+   - **Phase 5 (Evaluation):** Running `await test_agent()` loads your trained weights and tests the agent over 50 deterministic episodes, printing a detailed performance table.
 
-### 4. Automated Hyperparameter Tuning
-If you want to run an exhaustive, hands-off search to find the absolute best parameters over a long period (e.g., 48 hours), use the included Python script instead of the Jupyter Notebook.
+**Want to watch the AI play?**
+By default, the agent trains in "headless" mode for maximum speed (no graphics). To visually watch your trained agent play the game during Phase 5, remove the `--headless` flag from the `subprocess.Popen` command before running the cell!
 
-1. Open your Anaconda Prompt and navigate to this repository's `dqn-src` folder.
+### 4. 🎛️ Automated Hyperparameter Tuning (Advanced)
+
+If you want to step away and let your computer find the absolute mathematically best configuration over 24-48 hours, use the standalone optimizer script instead of the notebook.
+
+1. Open your Anaconda Prompt and navigate to `dqn-src`.
 2. Activate your environment: `conda activate godot-dqn`
-3. Run the optimization script: `python optimize.py`
+3. Run the script: `python optimize.py`
 
-**How it works & Retrieving Results:**
-- The script runs 100 trials of completely unique, random hyperparameter combinations (learning rate, batch size, gamma, etc.).
-- It trains the agent for 400 episodes and runs 15 deterministic evaluation episodes to calculate a "true" unbiased score for that configuration.
-- **`search_results.csv`**: Every single trial's score and configuration is appended to this file in real-time. If you stop the script, your data is safe.
-- **`best_config.json`** & **`best_dqn_model.pth`**: Whenever a new high score is achieved, the script automatically saves the winning configuration and the corresponding PyTorch model weights to these files.
+**What it does:**
+- It autonomously runs hundreds of uniquely randomized parameter combinations (learning rate, batch size, etc.).
+- It logs every single trial in real-time to `search_results.csv`.
+- Whenever it breaks its own high score, it automatically dumps the winning configuration to `best_config.json` and saves the winning PyTorch weights to `best_dqn_model.pth`.
