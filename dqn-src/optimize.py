@@ -98,6 +98,7 @@ async def evaluate_agent(agent, env, num_episodes=20):
         done = False
         step_count = 0
         cause_of_death = ""
+        score = 0.0
         
         while not done and env.websocket is not None:
             action = agent.get_action(state)
