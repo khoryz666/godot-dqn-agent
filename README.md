@@ -32,14 +32,15 @@ A Reinforcement Learning project that trains a Deep Q-Network (DQN) agent to pla
 ### 2. Godot Game Setup
 - Ensure you have Godot 4.x installed.
 - Open `godot-src/project.godot` in the Godot Editor.
-- The game is configured to automatically communicate with the Python RL agent over WebSockets (default port 11000).
+- The game is configured to automatically communicate with the Python RL agent over WebSockets (default port 11000). The `RLBridge` autoload reconnects automatically if the Python server is (re)started.
+- The notebook launches Godot headlessly itself: on Windows it expects the executable at `~\scoop\apps\godot\current\godot.console.exe`; on other platforms it uses `godot` from `PATH`. Adjust the `godot_exe` line in the notebook if your installation differs.
 
 ### 3. Running the Agent
 - Open the Jupyter Notebook `dqn-src/DQN_Agent.ipynb`.
 - Make sure to select the kernel in Jupyter (`godot-dqn`).
 - Run the cells in order:
   - The first cells start the Python WebSocket server and define the DQN agent, environment wrapper, and plotting helpers.
-  - The Phase 4 training cell (`await train()`) automatically launches Godot in headless mode and trains for 500 episodes. Real-time metrics (reward, loss, epsilon) are plotted as training progresses. Weights are saved to `dqn-src/dqn_model.pth` when training finishes or is interrupted.
-  - The Phase 5 evaluation cell (`await test_agent()`) plays 5 test episodes using the saved weights with epsilon = 0 (fully deterministic).
+  - The Phase 4 training cell (`await train()`) automatically launches Godot in headless mode and trains for 500 episodes. Real-time metrics (reward, loss, epsilon) are plotted as training progresses. Weights are saved to `dqn-src/dqn_model.pth` when training finishes or is interrupted. If Godot disconnects mid-run, training aborts with a clear error instead of silently producing garbage episodes.
+  - The Phase 5 evaluation cell (`await test_agent()`) plays 50 test episodes using the saved weights with epsilon = 0 (fully deterministic) and prints a metrics table (completion rate, snail avoidance, fall rate, average apples/distance, etc.). A warning is shown if no trained model file exists.
 - **Headless Automation**: The notebook uses Python's `subprocess` to automatically launch the Godot engine in headless mode. You do *not* need to manually press Play in the Godot Editor.
 - To visually watch the trained agent play, remove the `--headless` flag from the Phase 5 cell's `subprocess.Popen` call before running it.

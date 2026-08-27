@@ -8,8 +8,9 @@ This document outlines the step-by-step goals for successfully training a Deep Q
 
 ## Phase 2: State, Action, and Reward Design
 - [x] Define the discrete action space (0: Do nothing, 1: Move right, 2: Move left, 3: Jump, 4: Move right + jump, 5: Move left + jump).
-- [x] Define the state representation (player position, grounded flag, distances to rewards/enemies, raycast distances).
+- [x] Define the 9-dimensional state representation (position, velocity, grounded flag, dx/dy vectors to nearest apple and nearest enemy).
 - [x] Define the reward function (positive for progress/collecting, negative for enemies/falling, step penalty).
+- [x] Keep apple score separate from shaping rewards so the completion condition stays accurate.
 
 ## Phase 3: DQN Agent Implementation (Python)
 - [x] Initialize the Q-Network (PyTorch or TensorFlow).
