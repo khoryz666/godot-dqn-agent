@@ -103,7 +103,6 @@ def cleanup_stray_godot(project_path: str):
         try:
             ps = ("Get-CimInstance Win32_Process | Where-Object { "
                   "$_.Name -in @('godot.console.exe','godot.exe') -and "
-                  "$_.CommandLine -match '--headless' -and "
                   "$_.CommandLine -match [regex]::Escape('" + project_path + "') } | "
                   "Select-Object -ExpandProperty ProcessId")
             result = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
@@ -118,7 +117,7 @@ def cleanup_stray_godot(project_path: str):
             print(f"Warning: stray Godot cleanup failed: {e}", flush=True)
     else:
         try:
-            subprocess.run(["pkill", "-f", "godot.*--headless.*" + project_path],
+            subprocess.run(["pkill", "-f", "godot.*" + project_path],
                            capture_output=True, timeout=10)
         except Exception:
             pass
@@ -238,7 +237,7 @@ async def run_hyperband(run_id, godot_exe, project_path, port,
                   "budget_spent": 0} for c in unique_configs(n_configs[0], used_configs)]
 
     def launch_godot():
-        return subprocess.Popen([godot_exe, "--headless", "--path", project_path,
+        return subprocess.Popen([godot_exe, "--path", project_path,
                                  "--", "--rl-port", str(port)])
 
     async def ensure_godot():
@@ -290,7 +289,7 @@ async def run_hyperband(run_id, godot_exe, project_path, port,
                 rows.append({**entry, "score": score, "comp": comp})
 
             rows.sort(key=lambda r: r["score"], reverse=True)
-            keep = min(n_configs[rung], len(rows)) if rung + 1 < len(n_configs) else 1
+            keep = min(n_configs[rung + 1], len(rows)) if rung + 1 < len(n_configs) else 1
             promoted = {id(r) for r in rows[:keep]}
 
             with open(log_path, "a", newline="") as f:
