@@ -53,10 +53,14 @@ func _send_rl_state():
 	RLBridge.current_reward = 0.0
 
 func _on_action_received(action_id: int):
+	if not is_inside_tree():
+		return
 	player.current_rl_action = action_id
 	get_tree().paused = false
 
 func _on_reset_requested():
+	if not is_inside_tree():
+		return
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 	RLBridge.reset_episode()
