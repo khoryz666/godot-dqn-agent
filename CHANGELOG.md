@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CHANGELOG.md` to document project changes.
 
 ### Fixed
+- **Checkpoint clobbering on aborted runs**: `train()` now only overwrites `dqn_model.pth` when all episodes complete or training is interrupted manually. A Godot disconnect mid-run no longer destroys a good model.
+- **Unhandled crash on incompatible checkpoints**: `test_agent()` now catches weight-loading failures (e.g. stale or wrong-architecture `.pth` files) and evaluates an untrained agent with a warning instead of crashing.
+- **Null-tree errors during scene transitions**: `main.gd` guards `_on_action_received` and `_on_reset_requested` with `is_inside_tree()` so messages arriving mid-reload no longer spam errors or get dropped.
 - **State tuple unpacking**: `GodotEnv.step()` failure path returned a mismatched tuple; now returns a consistent 5-tuple.
 - **Score pollution by reward shaping**: `RLBridge` now separates `add_score()` from `add_reward()` so delta-distance shaping no longer counts toward the 2-apple completion condition or the evaluation metrics.
 - **Double state-sending on player death**: the game tree pauses immediately on death and `main.gd` suppresses duplicate terminal states via a `_sent_terminal` flag.
