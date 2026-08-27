@@ -117,5 +117,5 @@ func die(reason: String = "unknown") -> void:
 		RLBridge.add_reward(-10.0)
 		RLBridge.cause_of_death = reason
 		RLBridge.is_done = true
-	get_parent().get_parent()._send_rl_state()
-	get_tree().paused = true
+		get_parent().get_parent()._send_rl_state()
+		get_tree().paused = true
