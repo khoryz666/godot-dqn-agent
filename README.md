@@ -51,6 +51,12 @@ If you want to step away and let your computer find the absolute mathematically 
 3. Run the script: `python optimize.py`
 
 **What it does:**
-- It autonomously runs hundreds of uniquely randomized parameter combinations (learning rate, batch size, etc.).
-- It logs every single trial in real-time to `search_results.csv`.
-- Whenever it breaks its own high score, it automatically dumps the winning configuration to `best_config.json` and saves the winning PyTorch weights to `best_dqn_model.pth`.
+- It uses a **Hyperband (successive halving)** strategy instead of blind random search: it tests many configurations cheaply, keeps only the best third at each stage, and gradually invests more training episodes in the survivors (`27 → 9 → 3 → 1` configs at `4 / 15 / 48 / 100` episodes).
+- By default it launches **3 independent parallel searches** (one Godot instance per port) so the results can be compared for consistency.
+- It logs every configuration of every stage in real-time to `hyperband_run_<n>.csv`, and each run's winner to `hyperband_summary.csv`.
+- Whenever a run breaks the global high score, it automatically dumps the winning configuration to `best_config.json` and saves the winning PyTorch weights to `best_dqn_model.pth` (each run also saves its own artifacts as `best_config_run_<n>.json` / `best_dqn_model_run_<n>.pth`).
+
+**Useful options:**
+- `python optimize.py --runs 5` — run five searches instead of three.
+- `python optimize.py --sequential` — run searches one after another (useful on weaker CPUs).
+- `python optimize.py --base-port 11000` — change the first WebSocket port (one port per run).

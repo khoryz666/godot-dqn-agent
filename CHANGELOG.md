@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **Hyperband hyperparameter search in `optimize.py`**: replaced the exhaustive 100-trial random search with a successive-halving (Hyperband) strategy that tests 27 configurations cheaply and progressively invests more episodes in the best third (`27 → 9 → 3 → 1` configs at `4 / 15 / 48 / 100` training episodes). Supports multiple independent parallel runs (default 3, `--runs` / `--sequential` / `--base-port` CLI flags), per-rung logging to `hyperband_run_<n>.csv`, and a per-run winner (`best_config_run_<n>.json`, `best_dqn_model_run_<n>.pth`) plus a global best summary in `hyperband_summary.csv`.
+- **Per-port WebSocket configuration in Godot**: `rl_bridge.gd` accepts an `--rl-port <port>` command-line user argument (defaults to 11000) so multiple parallel optimizer runs can each talk to their own Godot instance.
 - **Phase 3: DQN Agent Implementation (Python)**:
   - `dqn_model.py`: PyTorch `QNetwork` implementation for function approximation.
   - `replay_buffer.py`: `ReplayBuffer` class for storing and sampling experience transitions.
