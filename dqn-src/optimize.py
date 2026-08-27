@@ -85,6 +85,33 @@ async def wait_for_godot(env: GodotEnv, timeout: float = 30.0):
             raise RuntimeError("Godot did not connect in time.")
         await asyncio.sleep(0.5)
 
+def cleanup_stray_godot(project_path: str):
+    """Kill orphaned headless Godot instances of this project (left behind by a
+    hard-killed process) so they cannot hijack the WebSocket connection."""
+    if os.name == "nt":
+        try:
+            ps = ("Get-CimInstance Win32_Process | Where-Object { "
+                  "$_.Name -in @('godot.console.exe','godot.exe') -and "
+                  "$_.CommandLine -match '--headless' -and "
+                  "$_.CommandLine -match [regex]::Escape('" + project_path + "') } | "
+                  "Select-Object -ExpandProperty ProcessId")
+            result = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
+                                    capture_output=True, text=True, timeout=30)
+            pids = [p.strip() for p in result.stdout.split() if p.strip().isdigit()]
+            for pid in pids:
+                subprocess.run(["taskkill", "/PID", pid, "/T", "/F"],
+                               capture_output=True, timeout=10)
+            if pids:
+                print(f"Cleaned up {len(pids)} stray headless Godot process(es).")
+        except Exception as e:
+            print(f"Warning: stray Godot cleanup failed: {e}")
+    else:
+        try:
+            subprocess.run(["pkill", "-f", "godot.*--headless.*" + project_path],
+                           capture_output=True, timeout=10)
+        except Exception:
+            pass
+
 async def evaluate_agent(agent, env, num_episodes=20):
     """Evaluates the agent deterministically."""
     # Temporarily set epsilon to 0 for evaluation
@@ -141,6 +168,7 @@ async def run_trial(config, trial_id, godot_exe, project_path):
     best_eval_score = -float('inf')
     
     try:
+        cleanup_stray_godot(project_path)
         godot_process = subprocess.Popen([godot_exe, "--headless", "--path", project_path])
         await wait_for_godot(env)
         
