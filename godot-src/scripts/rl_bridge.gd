@@ -5,6 +5,7 @@ signal reset_requested()
 
 var socket := WebSocketPeer.new()
 var is_connected := false
+var ws_url := "ws://127.0.0.1:11000"
 
 var current_reward := 0.0
 var total_score := 0.0
@@ -30,11 +31,15 @@ func reset_episode():
 func _ready():
 	# Keep processing even when the game is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	var args = OS.get_cmdline_user_args()
+	for i in range(args.size() - 1):
+		if args[i] == "--rl-port":
+			ws_url = "ws://127.0.0.1:%d" % int(args[i + 1])
 	connect_to_server()
 
 func connect_to_server():
-	print("RLBridge connecting to ws://127.0.0.1:11000...")
-	var err = socket.connect_to_url("ws://127.0.0.1:11000")
+	print("RLBridge connecting to %s..." % ws_url)
+	var err = socket.connect_to_url(ws_url)
 	if err != OK:
 		print("Unable to connect")
 
