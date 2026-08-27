@@ -12,7 +12,8 @@ class DQNAgent:
         self.state_size = state_size
         self.action_size = action_size
         self.gamma = config.get("gamma", 0.99)
-        self.epsilon = config.get("epsilon_start", 1.0)
+        self.epsilon_start = config.get("epsilon_start", 1.0)
+        self.epsilon = self.epsilon_start
         self.epsilon_min = config.get("epsilon_min", 0.05)
         self.epsilon_decay_steps = config.get("epsilon_decay_steps", 40000)
         self.total_steps = 0
@@ -49,7 +50,7 @@ class DQNAgent:
         """
         self.total_steps += 1
         fraction = min(1.0, self.total_steps / self.epsilon_decay_steps)
-        self.epsilon = 1.0 + fraction * (self.epsilon_min - 1.0)
+        self.epsilon = self.epsilon_start + fraction * (self.epsilon_min - self.epsilon_start)
 
     def train_step(self):
         """
