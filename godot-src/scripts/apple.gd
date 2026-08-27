@@ -18,5 +18,6 @@ func _on_body_entered(body: Node2D) -> void:
 		animated_sprite_2d.animation = "collected"
 		collected_sound.play()
 		RLBridge.add_score(10.0)
+		RLBridge.prev_apple_dist = -1.0
 		# Disable collision to prevent multiple collections
 		set_deferred("monitoring", false)
