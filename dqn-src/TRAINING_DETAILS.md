@@ -62,4 +62,4 @@ DQN is a reinforcement learning algorithm that uses a neural network to approxim
 - Target network sync: every 1000 steps (fixed in the training loop)
 - `frame_skip`: Number of physics frames per decision step (4, in `main.gd`)
 
-*Note: You can use `optimize.py` to run an automated random search across these hyperparameters over a long period. It will evaluate unique combinations and automatically dump the best combination to `best_config.json`.*
+*Note: You can use `optimize.py` to run an automated random search across these hyperparameters over a long period. It will evaluate unique combinations and automatically dump the best combination to `best_config.json`. There are exactly 324 unique combinations in the default search space; if you set `num_trials = 324` inside `optimize.py`, it will perform a mathematically exhaustive search, testing every single configuration exactly once without duplication.*
