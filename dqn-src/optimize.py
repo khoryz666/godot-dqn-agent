@@ -1,4 +1,5 @@
 import asyncio
+import csv
 import websockets
 import json
 import numpy as np
@@ -221,13 +222,13 @@ async def main():
         print(f"--- Trial {trial} Finished. Current Best Score: {best_overall_score:.2f} ---")
         
         # Log to CSV
-        with open("search_results.csv", "a") as f:
-            f.write(f"{datetime.now().isoformat()},{trial},{score},{json.dumps(config)}\n")
+        with open("search_results.csv", "a", newline="") as f:
+            csv.writer(f).writerow([datetime.now().isoformat(), trial, score, json.dumps(config)])
 
 if __name__ == "__main__":
     # Create CSV header if it doesn't exist
     if not os.path.exists("search_results.csv"):
-        with open("search_results.csv", "w") as f:
-            f.write("timestamp,trial,best_eval_score,config\n")
+        with open("search_results.csv", "w", newline="") as f:
+            csv.writer(f).writerow(["timestamp", "trial", "best_eval_score", "config"])
             
     asyncio.run(main())
