@@ -90,6 +90,7 @@ async def evaluate_agent(agent, env, num_episodes=20):
     # Temporarily set epsilon to 0 for evaluation
     old_epsilon = agent.epsilon
     agent.epsilon = 0.0 
+    agent.policy_net.eval()
     
     total_score = 0.0
     completed = 0
@@ -117,6 +118,7 @@ async def evaluate_agent(agent, env, num_episodes=20):
         if cause_of_death == "completed":
             completed += 1
             
+    agent.policy_net.train()
     agent.epsilon = old_epsilon # restore epsilon
     return total_score / num_episodes, completed / num_episodes
 
@@ -205,8 +207,16 @@ async def main():
     
     print("Starting 48-Hour Automated Hyperparameter Search...")
     
+    tested_configs = set()
+    
     for trial in range(1, num_trials + 1):
-        config = generate_random_config()
+        while True:
+            config = generate_random_config()
+            config_str = json.dumps(config, sort_keys=True)
+            if config_str not in tested_configs:
+                tested_configs.add(config_str)
+                break
+                
         score, agent = await run_trial(config, trial, godot_exe, project_path)
         
         if score > best_overall_score:
