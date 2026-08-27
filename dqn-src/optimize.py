@@ -172,12 +172,13 @@ async def train_episodes(agent, env, num_episodes):
             action = agent.get_action(state)
             next_state, reward, done, score, info = await env.step(action)
 
-            agent.memory.add(state, action, reward, next_state, done)
-            agent.train_step()
-            agent.update_epsilon()
+            if state and next_state and len(state) == STATE_SIZE and len(next_state) == STATE_SIZE:
+                agent.memory.add(state, action, reward, next_state, done)
+                agent.train_step()
+                agent.update_epsilon()
 
-            if agent.total_steps % 1000 == 0:
-                agent.update_target_network()
+                if agent.total_steps % 1000 == 0:
+                    agent.update_target_network()
 
             state = next_state
             step_count += 1
