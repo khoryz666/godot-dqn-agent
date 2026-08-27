@@ -4,10 +4,9 @@ extends Node2D
 
 func _ready() -> void:
 	_setup_level()
-	if RLBridge.is_connected: # Connect signals anyway just in case
-		RLBridge.action_received.connect(_on_action_received)
-		RLBridge.reset_requested.connect(_on_reset_requested)
-		RLBridge.reset_episode()
+	RLBridge.action_received.connect(_on_action_received)
+	RLBridge.reset_requested.connect(_on_reset_requested)
+	RLBridge.reset_episode()
 
 var frame_skip = 4
 var frame_counter = 0
@@ -26,7 +25,11 @@ func _physics_process(delta: float) -> void:
 			call_deferred("_send_rl_state")
 			get_tree().paused = true
 
+var _sent_terminal = false
+
 func _send_rl_state():
+	if _sent_terminal:
+		return
 	var state = player.get_rl_state()
 	
 	if RLBridge.prev_apple_dist > 0.0 and player.current_apple_dist < 10000.0:
@@ -45,6 +48,8 @@ func _send_rl_state():
 		"distance_x": player.position.x
 	}
 	RLBridge.send_state(state, RLBridge.current_reward, RLBridge.is_done, RLBridge.total_score, info)
+	if RLBridge.is_done:
+		_sent_terminal = true
 	RLBridge.current_reward = 0.0
 
 func _on_action_received(action_id: int):
