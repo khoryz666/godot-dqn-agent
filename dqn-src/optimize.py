@@ -110,6 +110,8 @@ async def evaluate_agent(agent, env, num_episodes=20):
             if step_count > 1000:
                 break
                 
+        if env.websocket is None:
+            raise RuntimeError("Godot disconnected during evaluation.")
         total_score += score
         if cause_of_death == "completed":
             completed += 1
@@ -156,6 +158,9 @@ async def run_trial(config, trial_id, godot_exe, project_path):
                 step_count += 1
                 if step_count > 1000:
                     done = True
+
+            if env.websocket is None:
+                raise RuntimeError("Godot disconnected during trial.")
                     
             # Evaluate every 100 episodes
             if (episode + 1) % 100 == 0:
