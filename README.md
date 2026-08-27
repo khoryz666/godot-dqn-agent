@@ -53,7 +53,7 @@ If you want to run an exhaustive, hands-off search to find the absolute best par
 3. Run the optimization script: `python optimize.py`
 
 **How it works & Retrieving Results:**
-- The script runs infinite iterations of completely unique, random hyperparameter combinations (learning rate, batch size, gamma, etc.).
+- The script runs 100 trials of completely unique, random hyperparameter combinations (learning rate, batch size, gamma, etc.).
 - It trains the agent for 400 episodes and runs 15 deterministic evaluation episodes to calculate a "true" unbiased score for that configuration.
 - **`search_results.csv`**: Every single trial's score and configuration is appended to this file in real-time. If you stop the script, your data is safe.
 - **`best_config.json`** & **`best_dqn_model.pth`**: Whenever a new high score is achieved, the script automatically saves the winning configuration and the corresponding PyTorch model weights to these files.
