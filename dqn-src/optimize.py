@@ -128,7 +128,12 @@ async def run_trial(config, trial_id, godot_exe, project_path):
     agent = DQNAgent(state_size, action_size, config)
     env = GodotEnv()
     
-    await env.start_server()
+    try:
+        await env.start_server()
+    except RuntimeError as e:
+        print(f"Trial {trial_id} failed to start server: {e}")
+        return -float('inf'), None
+    
     godot_process = None
     best_eval_score = -float('inf')
     
