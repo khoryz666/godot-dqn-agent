@@ -1,6 +1,3 @@
-# Guide
-GUIDE.md
-
 # Godot
 .godot/
 
@@ -12,12 +9,6 @@ venv/
 
 # Notebooks
 .ipynb_checkpoints/
-
-# RL artifacts
-dqn-src/results/
-*.pt
-*.pth
-PRESENTATION.md
 
 # Build Artifacts
 *.zip
