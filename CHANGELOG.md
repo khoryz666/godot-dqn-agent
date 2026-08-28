@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **Catastrophic Forgetting Protection**: Added automatic milestone checkpointing (`dqn_model_ep*.pth`) and best moving-average checkpointing (`dqn_model_best_*.pth`) to `1. Create DQN Agent.ipynb` to prevent losing a good policy due to divergence.
+- **CSV Logging**: Added a live CSV metrics logger (`training_log_*.csv`) to `1. Create DQN Agent.ipynb`.
+- **Project Restructuring**: Reorganized Python artifacts into clean `models/` and `logs/` directories. Scripts dynamically create these directories on launch to ensure cross-platform reproducibility.
 - **Hyperband hyperparameter search in `0. Hyperparameter Optimization.py`**: replaced the exhaustive 100-trial random search with a successive-halving (Hyperband) strategy that tests 27 configurations cheaply and progressively invests more episodes in the best third (`27 → 9 → 3 → 1` configs at `4 / 15 / 48 / 100` training episodes). Supports multiple independent parallel runs (default 3, `--runs` / `--sequential` / `--base-port` CLI flags), per-rung logging to `hyperband_run_<n>.csv`, and a per-run winner (`best_config_run_<n>.json`, `best_dqn_model_run_<n>.pth`) plus a global best summary in `hyperband_summary.csv`.
 - **Per-port WebSocket configuration in Godot**: `rl_bridge.gd` accepts an `--rl-port <port>` command-line user argument (defaults to 11000) so multiple parallel optimizer runs can each talk to their own Godot instance.
 - **Phase 3: DQN Agent Implementation (Python)**:
