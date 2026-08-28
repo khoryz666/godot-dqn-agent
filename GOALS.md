@@ -22,8 +22,11 @@ This document outlines the step-by-step goals for successfully training a Deep Q
 - [x] Implement the training loop connecting the Python agent to Godot.
 - [x] Log metrics (total reward per episode, survival time, loss).
 - [x] Tune hyperparameters (learning rate, discount factor, epsilon decay, batch size, target update frequency).
+- [x] Implement Hyperband successive-halving optimizer script for advanced tuning.
+- [x] Implement Catastrophic Forgetting protection (Best Model Checkpointing) and CSV Logging.
 
 ## Phase 5: Evaluation & Visualization
 - [x] Test the trained agent with exploration disabled (Epsilon = 0).
 - [x] Generate plots using `matplotlib` (Learning curves, Reward vs. Episode, Loss vs Episode).
 - [x] Clean up code and add comprehensive comments for report submission.
+- [x] Restructure project into clean `models/` and `logs/` artifact directories for robust distribution.
