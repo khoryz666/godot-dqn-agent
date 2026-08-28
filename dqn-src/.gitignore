@@ -1,8 +1,1 @@
-dqn_model.pth
-best_dqn_model.pth
-best_dqn_model_run_*.pth
-best_config.json
-best_config_run_*.json
-search_results.csv
-hyperband_run_*.csv
-hyperband_summary.csv
+PRESENTATION.md
