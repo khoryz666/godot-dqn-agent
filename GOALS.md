@@ -3,7 +3,7 @@
 This document outlines the step-by-step goals for successfully training a Deep Q-Network (DQN) agent to play the Godot 2D Platform Collector Game.
 
 ## Phase 1: Environment Setup & Interface (Godot ↔ Python)
-- [x] Establish communication bridge between Godot game and Python environment (e.g., sockets, ZeroMQ, or Godot RL Agents).
+- [x] Establish communication bridge between Godot game and Python environment
 - [x] Expose Godot environment API to receive actions and return `(next_state, reward, done_status, score)`.
 
 ## Phase 2: State, Action, and Reward Design

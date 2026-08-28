@@ -40,7 +40,7 @@ DQN is a reinforcement learning algorithm that uses a neural network to approxim
    - **Policy Network:** Actively updated and used to select actions.
    - **Target Network:** A frozen copy of the Policy Network, synced every 1000 steps. It calculates the target Q-values during loss calculation to prevent unstable feedback loops.
 5. **Epsilon-Greedy Exploration:** The agent balances exploration and exploitation via an $\epsilon$ parameter. $\epsilon$ decays **linearly from 1.0 to 0.01 over 40,000 total steps taken** (not per episode), guaranteeing a minimum amount of gameplay experience is acquired before the policy becomes mostly greedy.
-6. **Training Loop:** 500 episodes with a 1000-step failsafe per episode. Live metrics (reward, loss, epsilon) are plotted every 10 episodes, and weights are saved to `dqn_model.pth` when training finishes or is interrupted.
+6. **Training Loop:** 500 episodes with a 1000-step failsafe per episode. Live metrics are plotted every 10 episodes and saved to `logs/training_log_*.csv`. To prevent **catastrophic forgetting**, the agent's highest-scoring weights are automatically checkpointed as `models/dqn_model_best_{episode}.pth` whenever it breaks its moving-average high score, and final weights are saved to `models/dqn_model.pth`.
 
 ## Reward Structure
 - **+10.0** for collecting a reward (apple) — also adds **+10 to the score**
@@ -51,7 +51,7 @@ DQN is a reinforcement learning algorithm that uses a neural network to approxim
 - **Score vs Reward:** Shaping rewards affect the reward signal only. The score counter counts *apples only*, so the completion condition and evaluation metrics cannot be polluted by shaping.
 
 ## Evaluation
-- `test_agent()` plays 50 episodes with epsilon = 0 (fully deterministic) using the saved `dqn_model.pth` weights.
+- `test_agent()` plays 50 episodes with epsilon = 0 (fully deterministic) using the saved `models/dqn_model.pth` (or best checkpoint) weights.
 - A warning is printed if no trained model file is found (the untrained agent would then be evaluated).
 - Godot reports the exact cause of death (completed / snail / fall) and distance traveled per episode; the notebook aggregates:
   - Average reward, score, and apples eaten
