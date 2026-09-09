@@ -11,6 +11,7 @@ import websockets
 from datetime import datetime
 
 from dqn_agent import DQNAgent
+from godot_launcher import resolve_godot_exe
 
 STATE_SIZE = 9
 ACTION_SIZE = 6
@@ -364,8 +365,7 @@ async def main():
                         help="Run searches one after another instead of in parallel.")
     args = parser.parse_args()
 
-    godot_exe = ("godot" if os.name == "posix" else
-                 os.path.expanduser(r"~\scoop\apps\godot\current\godot.console.exe"))
+    godot_exe = resolve_godot_exe()
     project_path = os.path.abspath(os.path.join("..", "godot-src"))
 
     cleanup_stray_godot(project_path)

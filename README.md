@@ -24,9 +24,14 @@ We use Conda to manage our Python dependencies.
 
 ### 2. Godot Setup
 
-1. Ensure you have **Godot 4.x** installed.
-2. Open `godot-src/project.godot` in the Godot Editor.
-3. **Important Note:** You do *not* need to manually press Play in Godot! Our Python scripts will automatically launch the game in the background.
+1. Ensure you have **Godot 4.6+** installed.
+2. Make the `godot` command available on your system `PATH` (the Python scripts launch Godot via `subprocess.Popen(["godot", ...])` by default).
+   - If you'd rather not add Godot to `PATH`, set the `GODOT_EXE` environment variable to the full path of your Godot executable instead, e.g. on Windows if you installed via Scoop:
+     ```powershell
+     $env:GODOT_EXE = "$env:USERPROFILE\scoop\apps\godot\current\godot.console.exe"
+     ```
+3. Open `godot-src/project.godot` in the Godot Editor.
+4. **Important Note:** You do *not* need to manually press Play in Godot! Our Python scripts will automatically launch the game in the background.
 
 ### 3. How to Train the Agent
 
