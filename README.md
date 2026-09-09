@@ -20,6 +20,7 @@ We use Conda to manage our Python dependencies.
    ```bash
    conda env create -f environment.yml
    ```
+   *(No NVIDIA GPU? `environment.yml` pins `pytorch-cuda=11.8`, which requires a CUDA-capable GPU to install. Remove the `pytorch-cuda=11.8` line and the `nvidia` channel entry before running this command to get a CPU-only PyTorch build instead — the code already falls back to CPU automatically.)*
 *(Note: If you ever need to update packages, edit `environment.yml` and run `conda env update -f environment.yml --prune`)*
 
 ### 2. Godot Setup

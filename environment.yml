@@ -2,12 +2,16 @@ name: godot-dqn
 channels:
   - pytorch
   - nvidia
+  - conda-forge
   - defaults
 dependencies:
   - python=3.10
   - pytorch
-  - torchvision
-  - torchaudio
+  # Only needed for an NVIDIA GPU + CUDA 11.8 setup. On a machine without a
+  # CUDA-capable GPU (e.g. macOS, or a CPU-only Windows/Linux box), delete
+  # this line and the `nvidia` channel above — PyTorch will install a
+  # CPU-only build instead, and the code already falls back to CPU
+  # automatically (see dqn_agent.py's `torch.cuda.is_available()` check).
   - pytorch-cuda=11.8
   - jupyter
   - ipykernel
